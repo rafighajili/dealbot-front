@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealbot</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      function onTelegramAuth(user) {
+        fetch('https://api.dealbot.ml/api/Authentication/logintg', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: user.id.toString(),
+            firstName: user.first_name,
+            lastName: user.last_name,
+            username: user.username,
+            photoUrl: user.photo_url,
+            authDate: user.auth_date.toString(),
+            hash: user.hash,
+          }),
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            localStorage.setItem('accessToken', res.accessToken);
+            localStorage.setItem('refreshToken', res.refreshToken);
+            window.location.replace('/dashboard');
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    </script>
+  </body>
+</html>
